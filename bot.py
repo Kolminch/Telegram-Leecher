@@ -9,8 +9,7 @@ logging.getLogger("imdbpy").setLevel(logging.ERROR)
 
 from pyrogram import Client, __version__
 from pyrogram.raw.all import layer
-from database.ia_filterdb import Media
-from info import SESSION, API_ID, API_HASH, BOT_TOKEN, LOG_STR
+from info import SESSION, API_ID, API_HASH, BOT_TOKEN,
 from typing import Union, Optional, AsyncGenerator
 from pyrogram import types
 
@@ -23,7 +22,7 @@ class Bot(Client):
             api_hash=API_HASH,
             bot_token=BOT_TOKEN,
             workers=50,
-            plugins={"root": "plugins"},
+            plugins={"root": "colab_leecher"},
             sleep_threshold=5,
         )
 
@@ -36,7 +35,6 @@ class Bot(Client):
         B_NAME = me.first_name
         self.username = '@' + me.username
         logging.info(f"{me.first_name} with for Pyrogram v{__version__} (Layer {layer}) started on {me.username}.")
-        logging.info(LOG_STR)
 
     async def stop(self, *args):
         await super().stop()
