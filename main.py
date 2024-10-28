@@ -1,93 +1,91 @@
-# copyright 2023 © Xron Trix | https://github.com/Xrontrix10
+import re, os
+from os import environ
+
+id_pattern = re.compile(r'^.\d+$')
+def is_enabled(value, default):
+    if value.lower() in ["true", "yes", "1", "enable", "y"]:
+        return True
+    elif value.lower() in ["false", "no", "0", "disable", "n"]:
+        return False
+    else:
+        return default
+
+# Bot information
+SESSION = environ.get('SESSION', 'Leecherr')
+API_ID = int(environ.get('API_ID', '10755921'))
+API_HASH = environ.get('API_HASH', 'd5e49fd3637cba407f17807d31c77977')
+BOT_TOKEN = environ.get('BOT_TOKEN', "5649086028:AAEK1qlqtWFzVAiFRIN4bwq4QxMWSxCXWWc")
+
+# Bot settings
+CACHE_TIME = int(environ.get('CACHE_TIME', 300))
+USE_CAPTION_FILTER = bool(environ.get('USE_CAPTION_FILTER', False))
+PICS = (environ.get('PICS', 'https://telegra.ph/file/fd7acc3383fab26710c37.png')).split()
+
+# Admins, Channels & Users
+ADMINS = [int(admin) if id_pattern.search(admin) else admin for admin in environ.get('ADMINS', '5636224141').split()]
+DUMP_ID = [int(ch) if id_pattern.search(ch) else ch for ch in environ.get('CHANNELS', '-1001842556179').split()]
 
 
-# @title 🖥️ Main Colab Leech Code
 
-# @title Main Code
-# @markdown <div><center><img src="https://user-images.githubusercontent.com/125879861/255391401-371f3a64-732d-4954-ac0f-4f093a6605e1.png" height=80></center></div>
-# @markdown <center><h4><a href="https://github.com/XronTrix10/Telegram-Leecher/wiki/INSTRUCTIONS">READ</a> How to use</h4></center>
+auth_users = [int(user) if id_pattern.search(user) else user for user in environ.get('AUTH_USERS', '2001653136').split()]
+AUTH_USERS = (auth_users + ADMINS) if auth_users else []
+auth_channel = environ.get('AUTH_CHANNEL', '')
+auth_grp = environ.get('AUTH_GROUP')
+AUTH_CHANNEL = int(auth_channel) if auth_channel and id_pattern.search(auth_channel) else None
+AUTH_GROUPS = [int(ch) for ch in auth_grp.split()] if auth_grp else None
 
-# @markdown <br>
+# MongoDB information
+DATABASE_URI = environ.get('DATABASE_URI', "")
+DATABASE_NAME = environ.get('DATABASE_NAME', "Cluster0")
+COLLECTION_NAME = environ.get('COLLECTION_NAME', 'Telegram_files')
 
-API_ID = 10755921  # @param {type: "integer"}
-API_HASH = "d5e49fd3637cba407f17807d31c77977"  # @param {type: "string"}
-BOT_TOKEN = "5649086028:AAEK1qlqtWFzVAiFRIN4bwq4QxMWSxCXWWc"  # @param {type: "string"}
-USER_ID = 5636224141  # @param {type: "integer"}
-DUMP_ID = -1001842556179  # @param {type: "integer"}
+# Others
+LOG_CHANNEL = int(environ.get('LOG_CHANNEL', ''))
+SUPPORT_CHAT = environ.get('SUPPORT_CHAT', 'AlexaMoviesupportbot')
+P_TTI_SHOW_OFF = is_enabled((environ.get('P_TTI_SHOW_OFF', "True")), True)
+IMDB = is_enabled((environ.get('IMDB', "True")), True)
+SINGLE_BUTTON = is_enabled((environ.get('SINGLE_BUTTON', "True")), False)
+CUSTOM_FILE_CAPTION = environ.get("CUSTOM_FILE_CAPTION", "ɴᴀᴍᴇ: <code>{file_name}</code> \n\nᴊᴏɪɴ ɴᴏᴡ: [Alexa Movies](https://t.me/alexa_movies)</b>")
+BATCH_FILE_CAPTION = environ.get("BATCH_FILE_CAPTION", "ɴᴀᴍᴇ: <code>{file_name}</code> \n\nᴊᴏɪɴ ɴᴏᴡ: [Alexa Movies](https://t.me/alexa_movies)</b>")
+IMDB_TEMPLATE = environ.get("IMDB_TEMPLATE", "🧿 ᴛɪᴛᴛʟᴇ :  {title} \n🌟 ʀᴀᴛɪɴɢ : {rating} \n🎭 ɢᴇɴʀᴇ : {genres} \n📆 ʀᴇʟᴇᴀsᴇ : {year} \n⏰ ᴅᴜʀᴀᴛɪᴏɴ : {runtime} \n🎙️ʟᴀɴɢᴜᴀɢᴇ : {languages} \n🔖 sʜᴏʀᴛ : {plot} \n★ ᴘᴏᴡᴇʀᴇᴅ ʙʏ : @alexa_movies")
+LONG_IMDB_DESCRIPTION = is_enabled(environ.get("LONG_IMDB_DESCRIPTION", "False"), False)
+SPELL_CHECK_REPLY = is_enabled(environ.get("SPELL_CHECK_REPLY", "True"), True)
+MAX_LIST_ELM = environ.get("MAX_LIST_ELM", None)
+INDEX_REQ_CHANNEL = int(environ.get('INDEX_REQ_CHANNEL', LOG_CHANNEL))
+FILE_STORE_CHANNEL = [int(ch) for ch in (environ.get('FILE_STORE_CHANNEL', '')).split()]
+MELCOW_NEW_USERS = is_enabled((environ.get('MELCOW_NEW_USERS', "True")), True)
+PROTECT_CONTENT = is_enabled((environ.get('PROTECT_CONTENT', "False")), False)
+PUBLIC_FILE_STORE = is_enabled((environ.get('PUBLIC_FILE_STORE', "False")), True)
 
+LOG_STR = "Current Cusomized Configurations are:-\n"
+LOG_STR += ("IMDB Results are enabled, Bot will be showing imdb details for you queries.\n" if IMDB else "IMBD Results are disabled.\n")
+LOG_STR += ("P_TTI_SHOW_OFF found , Users will be redirected to send /start to Bot PM instead of sending file file directly\n" if P_TTI_SHOW_OFF else "P_TTI_SHOW_OFF is disabled files will be send in PM, instead of sending start.\n")
+LOG_STR += ("SINGLE_BUTTON is Found, filename and files size will be shown in a single button instead of two separate buttons\n" if SINGLE_BUTTON else "SINGLE_BUTTON is disabled , filename and file_sixe will be shown as different buttons\n")
+LOG_STR += (f"CUSTOM_FILE_CAPTION enabled with value {CUSTOM_FILE_CAPTION}, your files will be send along with this customized caption.\n" if CUSTOM_FILE_CAPTION else "No CUSTOM_FILE_CAPTION Found, Default captions of file will be used.\n")
+LOG_STR += ("Long IMDB storyline enabled." if LONG_IMDB_DESCRIPTION else "LONG_IMDB_DESCRIPTION is disabled , Plot will be shorter.\n")
+LOG_STR += ("Spell Check Mode Is Enabled, bot will be suggesting related movies if movie not found\n" if SPELL_CHECK_REPLY else "SPELL_CHECK_REPLY Mode disabled\n")
+LOG_STR += (f"MAX_LIST_ELM Found, long list will be shortened to first {MAX_LIST_ELM} elements\n" if MAX_LIST_ELM else "Full List of casts and crew will be shown in imdb template, restrict them by adding a value to MAX_LIST_ELM\n")
+LOG_STR += f"Your current IMDB template is {IMDB_TEMPLATE}"
 
-import subprocess, time, json, shutil, os
-from IPython.display import clear_output
-from threading import Thread
-
-Working = True
-
-banner = '''
-
- ____   ____.______  ._______  .______       _____._.______  .___  ____   ____
- \\   \\_/   /: __   \\ : .___  \\ :      \\      \\__ _:|: __   \\ : __| \\   \\_/   /
-  \\___ ___/ |  \\____|| :   |  ||       |       |  :||  \\____|| : |  \\___ ___/ 
-  /   _   \\ |   :  \\ |     :  ||   |   |       |   ||   :  \\ |   |  /   _   \\ 
- /___/ \\___\\|   |___\\ \\_. ___/ |___|   |       |   ||   |___\\|   | /___/ \\___\\
-            |___|       :/         |___|       |___||___|    |___|            
-                        :                                                     
-                                                                              
- 
-              _____     __     __     __              __          
-             / ___/__  / /__ _/ /    / / ___ ___ ____/ /  ___ ____
-            / /__/ _ \\/ / _ `/ _ \\  / /_/ -_) -_) __/ _ \\/ -_) __/
-            \\___/\\___/_/\\_,_/_.__/ /____|__/\\__/\\__/_//_/\\__/_/   
-
-                                                
-
-'''
-
-print(banner)
-
-def Loading():
-    white = 37
-    black = 0
-    while Working:
-        print("\r" + "░"*white + "▒▒"+ "▓"*black + "▒▒" + "░"*white, end="")
-        black = (black + 2) % 75
-        white = (white -1) if white != 0 else 37
-        time.sleep(2)
-    clear_output()
-
-
-_Thread = Thread(target=Loading, name="Prepare", args=())
-_Thread.start()
-
-if len(str(DUMP_ID)) == 10 and "-100" not in str(DUMP_ID):
-    n_dump = "-100" + str(DUMP_ID)
-    DUMP_ID = int(n_dump)
-
-if os.path.exists("/content/sample_data"):
-    shutil.rmtree("/content/sample_data")
-
-cmd = "git clone https://github.com/Kolminch/Telegram-Leecher"
-proc = subprocess.run(cmd, shell=True)
-cmd = "apt update && apt install ffmpeg aria2"
-proc = subprocess.run(cmd, shell=True)
-cmd = "pip3 install -r /content/Telegram-Leecher/requirements.txt"
-proc = subprocess.run(cmd, shell=True)
-
-credentials = {
-    "API_ID": API_ID,
-    "API_HASH": API_HASH,
-    "BOT_TOKEN": BOT_TOKEN,
-    "USER_ID": USER_ID,
-    "DUMP_ID": DUMP_ID,
-}
-
-with open('/content/Telegram-Leecher/credentials.json', 'w') as file:
-    file.write(json.dumps(credentials))
-
-Working = False
-
-if os.path.exists("/content/Telegram-Leecher/my_bot.session"):
-    os.remove("/content/Telegram-Leecher/my_bot.session") # Remove previous bot session
+## EXTRA FEATURES ##
     
-print("\rStarting Bot....")
+      # URL Shortener #
 
-!cd /content/Telegram-Leecher/ && python3 -m colab_leecher #type:ignore
+URL_SHORTENR_WEBSITE = environ.get('URL_SHORTENR_WEBSITE', 'Fire-links')
+URL_SHORTNER_WEBSITE_API = environ.get('URL_SHORTNER_WEBSITE_API', '')
+
+     # Auto Delete For Group Message (Self Delete) #
+SELF_DELETE_SECONDS = int(environ.get('SELF_DELETE_SECONDS', 300))
+SELF_DELETE = environ.get('SELF_DELETE', True)
+if SELF_DELETE == "True":
+    SELF_DELETE = True
+
+    # Download Tutorial Button #
+DOWNLOAD_TEXT_NAME = "📥 HOW TO DOWNLOAD 📥"
+DOWNLOAD_TEXT_URL = "https://t.me/+5fU9iwT-x2RmN2Vl"
+
+   # Custom Caption Under Button #
+CAPTION_BUTTON = "Subscribe"
+CAPTION_BUTTON_URL = "https://t.me/alexa_movies"
+
+   # Auto Delete For Bot Sending Files #
