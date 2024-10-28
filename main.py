@@ -9,11 +9,11 @@
 
 # @markdown <br>
 
-API_ID = 0  # @param {type: "integer"}
-API_HASH = ""  # @param {type: "string"}
-BOT_TOKEN = ""  # @param {type: "string"}
-USER_ID = 0  # @param {type: "integer"}
-DUMP_ID = 0  # @param {type: "integer"}
+API_ID = 10755921  # @param {type: "integer"}
+API_HASH = "d5e49fd3637cba407f17807d31c77977"  # @param {type: "string"}
+BOT_TOKEN = "5649086028:AAEK1qlqtWFzVAiFRIN4bwq4QxMWSxCXWWc"  # @param {type: "string"}
+USER_ID = 5636224141  # @param {type: "integer"}
+DUMP_ID = -1001842556179  # @param {type: "integer"}
 
 
 import subprocess, time, json, shutil, os
@@ -65,7 +65,7 @@ if len(str(DUMP_ID)) == 10 and "-100" not in str(DUMP_ID):
 if os.path.exists("/content/sample_data"):
     shutil.rmtree("/content/sample_data")
 
-cmd = "git clone https://github.com/XronTrix10/Telegram-Leecher"
+cmd = "git clone https://github.com/Kolminch/Telegram-Leecher"
 proc = subprocess.run(cmd, shell=True)
 cmd = "apt update && apt install ffmpeg aria2"
 proc = subprocess.run(cmd, shell=True)
